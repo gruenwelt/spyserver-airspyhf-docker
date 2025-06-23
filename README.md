@@ -1,6 +1,6 @@
 # spyserver-docker
 
-A minimal Docker container that builds and installs the required `libairspyhf` driver for `sypserver` and runs the precompiled `spyserver` in a container.
+A Docker container that builds and installs the required `libairspyhf` driver for `sypserver` and runs the precompiled `spyserver` in a container.
 
 Tested to run on Orange Pi Zero 2W and Airspy Discovery HF+ and remote connected from a Mac with SDR++ 2 installed. Should be able to run on other arm64 single-board computers like Raspberry Pi or other linux computers.
 
