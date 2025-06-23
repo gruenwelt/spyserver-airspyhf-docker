@@ -1,48 +1,49 @@
 # syntax=docker/dockerfile:1.4
 
-FROM ubuntu:22.04
+# --- Build Stage ---
+FROM debian:bookworm-slim AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install build dependencies and runtime libraries
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     git \
     pkg-config \
     libusb-1.0-0-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tmp
+
+# Clone and build libairspyhf
+RUN git clone --depth 1 https://github.com/airspy/airspyhf.git && \
+    mkdir airspyhf/build && cd airspyhf/build && \
+    cmake .. && make -j$(nproc) && make install
+
+# Strip the built shared library
+RUN strip /usr/local/lib/libairspyhf.so.1.8.0
+
+# --- Runtime Stage ---
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libusb-1.0-0 \
-    tar \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/spyserver
 
-# Copy all local files (including spyserver-arm64.tar) into container
-COPY . .
+# Copy only the built library and headers
+COPY --from=builder /usr/local/lib /usr/local/lib
+COPY --from=builder /usr/local/include /usr/local/include
 
-# Add GitHub to known_hosts so SSH clone doesn't fail
-RUN mkdir -p ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+# Copy the spyserver tar and unpack it
+COPY spyserver*.tar ./
+RUN tar -xvf spyserver*.tar && rm spyserver*.tar
 
-# Clone libairspyhf over SSH using BuildKit
-RUN --mount=type=ssh git clone git@github.com:airspy/airspyhf.git
-
-# Build and install libairspyhf
-WORKDIR /opt/spyserver/airspyhf
-RUN mkdir build && cd build && \
-    cmake .. && \
-    make -j$(nproc) && \
-    make install && \
-    ldconfig
-
-# Remove build dependencies but keep runtime libraries
-RUN apt-get remove -y build-essential cmake pkg-config libusb-1.0-0-dev git && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Extract the spyserver binary archive provided by the user
-WORKDIR /opt/spyserver
-RUN tar -xvf spyserver*.tar
+# Configure dynamic linker
+RUN echo "/usr/local/lib" > /etc/ld.so.conf.d/local-lib.conf && ldconfig
 
 EXPOSE 5555
 
