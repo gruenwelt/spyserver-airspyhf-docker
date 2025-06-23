@@ -17,33 +17,6 @@ Tested to run on Orange Pi Zero 2W and Airspy Discovery HF+ and remote connected
 
 ---
 
-## 🔧 Enable BuildKit
-
-Enable BuildKit temporarily in your shell:
-```bash
-export DOCKER_BUILDKIT=1
-```
-Or persist it globally:
-```bash
-echo "export DOCKER_BUILDKIT=1" >> ~/.bashrc
-```
-
----
-
-## 🔑 SSH Setup
-
-Ensure `ssh-agent` is running and your GitHub SSH key is loaded:
-```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
-```
-Test GitHub SSH access:
-```bash
-ssh -T git@github.com
-```
-
----
-
 ## 🏗️ Build the Docker image
 ```bash
 docker build --ssh default -t spyserver-airspyhf .
