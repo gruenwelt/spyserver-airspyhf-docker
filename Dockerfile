@@ -42,7 +42,7 @@ RUN apt-get remove -y build-essential cmake pkg-config libusb-1.0-0-dev git && \
 
 # Extract the spyserver binary archive provided by the user
 WORKDIR /opt/spyserver
-RUN tar -xvf spyserver-arm64.tar
+RUN tar -xvf spyserver*.tar
 
 EXPOSE 5555
 
