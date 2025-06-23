@@ -53,10 +53,11 @@ docker build --ssh default -t spyserver-airspyhf .
 
 ## 🚀 Run the container
 ```bash
-docker run -it \
+docker run -d \
   --name spyserver-airspyhf-container \
   --device=/dev/bus/usb \
   -p 5555:5555 \
+  --restart unless-stopped \
   spyserver-airspyhf
 ```
 
