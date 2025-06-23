@@ -1,15 +1,15 @@
 # spyserver-docker
 
-A minimal Docker container that runs the precompiled `spyserver` in a container and builds and installs the required `libairspyhf` driver for Airspy HF+.
+A minimal Docker container that builds and installs the required `libairspyhf` driver for `sypserver` and runs the precompiled `spyserver` in a container.
 
-Tested to run on Orange Pi Zero 2W and Airspy Discovery HF+, should be able to run on other arm64 single-board computers like Raspberry Pi
+Tested to run on Orange Pi Zero 2W and Airspy Discovery HF+, should be able to run on other arm64 single-board computers like Raspberry Pi or other linux computers.
 
 ## Prerequisites
 
 - A Linux system with Docker >= 20.10
 - Docker BuildKit enabled
 - An SSH key registered with your GitHub account
-- The spyserver file `spyserver-arm64.tar` downloaded from https://airspy.com/download and placed in the same folder as the Dockerfile
+- The spyserver file `spyserver*.tar` downloaded from https://airspy.com/download and placed in the same folder as the Dockerfile
 
 ## Enable BuildKit
 
@@ -47,5 +47,5 @@ docker run -it \
 ## Notes
 
 - This image supports Airspy HF+ and HF+ Discovery.
-- You must manually download and provide the `spyserver-arm64.tar` file.
+- You must manually download and provide the `spyserver*.tar` file.
 - The container exposes port 5555 for remote SDR clients like SDR# or SDR++.
