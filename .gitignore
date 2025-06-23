@@ -1,0 +1,11 @@
+# Ignore the spyserver tarball downloaded by user
+spyserver*.tar
+
+# Ignore macOS Finder metadata
+.DS_Store
+
+# Ignore Vim swap files
+*.swp
+
+# Ignore logs if any created locally
+*.log
