@@ -1,8 +1,8 @@
-# spyserver-airspyhf-docker
+# spyserver-docker
 
-A minimal Docker container that builds and installs the `libairspyhf` driver for Airspy HF+ and runs the precompiled `spyserver` in a container.
+A minimal Docker container that runs the precompiled `spyserver` in a container and builds and installs the required `libairspyhf` driver for Airspy HF+.
 
-Tested to run on Orange Pi Zero 2W, should be able to run on other arm64 single-board computers like Raspberry Pi
+Tested to run on Orange Pi Zero 2W and Airspy Discovery HF+, should be able to run on other arm64 single-board computers like Raspberry Pi
 
 ## Prerequisites
 
@@ -14,36 +14,36 @@ Tested to run on Orange Pi Zero 2W, should be able to run on other arm64 single-
 ## Enable BuildKit
 
 Enable BuildKit temporarily in your shell:
-
+```bash
 export DOCKER_BUILDKIT=1
-
+```
 Or persist it globally:
-
+```bash
 echo "export DOCKER_BUILDKIT=1" >> ~/.bashrc
-
+```
 ## SSH Setup
 
 Ensure `ssh-agent` is running and your GitHub SSH key is loaded:
-
+```bash
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
-
+```
 Test GitHub SSH access:
-
+```bash
 ssh -T git@github.com
-
+```
 ## Build the Docker image
-
+```bash
 docker build --ssh default -t spyserver-airspyhf .
-
+```
 ## Run the container
-
+```bash
 docker run -it \
   --name spyserver-airspyhf-container \
   --device=/dev/bus/usb \
   -p 5555:5555 \
   spyserver-airspyhf
-
+```
 ## Notes
 
 - This image supports Airspy HF+ and HF+ Discovery.
